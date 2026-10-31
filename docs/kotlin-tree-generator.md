@@ -4,7 +4,7 @@
 
 本项目当前提供 Kotlin 编译器仓库 `generators/tree-generator-common` 的通用树模型和源码生成能力，不包含任何具体语言/IR 的树定义、`TreeBuilder`、领域专用 printer 或生成后的树源码。
 
-当前上游快照为 Kotlin commit [`9668d756cb84bc09a64498bcc0c84d75b4456d5a`](https://github.com/JetBrains/kotlin/commit/9668d756cb84bc09a64498bcc0c84d75b4456d5a)。`upstream/kotlin/tree-generator-common/src` 中的 32 个 Kotlin 文件，以及 `upstream/kotlin/generators/main` 中的 3 个构建辅助文件均来自该上游版本；来源、许可证和 NOTICE 记录见 [`../upstream/UPSTREAM.md`](../upstream/UPSTREAM.md)。这些是 JetBrains Kotlin 上游衍生源码，不是本项目原创代码；本项目也不是 JetBrains 官方项目。
+当前上游快照为 Kotlin commit [`9668d756cb84bc09a64498bcc0c84d75b4456d5a`](https://github.com/JetBrains/kotlin/commit/9668d756cb84bc09a64498bcc0c84d75b4456d5a)。`upstream/kotlin/tree-generator-common/src` 中的 32 个 Kotlin 文件、`upstream/kotlin/generators/main` 中的 3 个辅助文件，以及 `upstream/kotlin/compiler-support/src` 中选出的 compiler 支持源码均来自该上游版本。`addToStdlib.kt` 只摘取 tree-gen 实际使用的两个 `ifNotEmpty` 重载和 `joinToWithBuffer`；`GeneratorsFileUtil.kt` 有标注的 JDK-only 本地适配。文件清单、修改记录、许可证和 NOTICE 见 [`../upstream/UPSTREAM.md`](../upstream/UPSTREAM.md)。这些均为 JetBrains Kotlin 上游衍生源码；本项目不是 JetBrains 官方项目。
 
 ## 源码分层
 
@@ -17,8 +17,9 @@ Gradle 子模块 `tree-generator` 将以下上游目录作为 Kotlin main source
 | `org.jetbrains.kotlin.generators.tree.imports` | 可导入类型、导入收集、类型引用的渲染 |
 | `org.jetbrains.kotlin.generators.tree.printer` | 通用生成文件管理、元素/实现/Builder/visitor printer 的抽象及输出流程 |
 | `org.jetbrains.kotlin.generators.util` | 上游提供的文件生成工具、接口/抽象类求解及 printer 辅助实现；源码位于 `upstream/kotlin/generators/main` |
+| `org.jetbrains.kotlin.descriptors` / `org.jetbrains.kotlin.types` / `org.jetbrains.kotlin.utils` / `org.jetbrains.kotlin.util` | 为保持上游 API 所需的少量类型和工具源码；具体文件见 provenance 清单 |
 
-本项目通过 `org.jetbrains.kotlin:kotlin-compiler:2.1.21` 二进制依赖提供部分 Kotlin compiler/IntelliJ utility 类型，并使用 Kotlin reflection；没有复制整个 Kotlin compiler 源码仓库。`moduleName=tree_generator_common` 与 `-Xjvm-default=all` 用于匹配原模块的 JVM API 形态。
+本项目已用所选上游源码提供 `Modality`、`Variance`、`IndentingPrinter`、`SmartPrinter` 等类型/工具，不再依赖 `kotlin-compiler` 二进制。运行时仍依赖 `kotlin-reflect`、Kotlin stdlib 和传递引入的 `org.jetbrains:annotations`；Kotlin Gradle plugin 仅为构建依赖。因此当前并非零运行时依赖。复制的支持类型保留 `org.jetbrains.kotlin.*` 原包名；若消费方同时引入提供同名类型的 compiler artifact，可能产生类路径重复，因此不应混用。`moduleName=tree_generator_common` 与 `-Xjvm-default=all` 用于匹配原模块的 JVM API 形态。
 
 ## 通用生成流程
 

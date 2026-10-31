@@ -12,6 +12,7 @@ kotlin {
     sourceSets.named("main") {
         kotlin.srcDir("../upstream/kotlin/tree-generator-common/src")
         kotlin.srcDir("../upstream/kotlin/generators/main")
+        kotlin.srcDir("../upstream/kotlin/compiler-support/src")
     }
 }
 
@@ -29,8 +30,7 @@ tasks.processResources {
 }
 
 dependencies {
-    // Pinned compiler binaries provide Kotlin's types/utilities; no compiler source checkout is needed.
-    api("org.jetbrains.kotlin:kotlin-compiler:2.1.21")
+    // Selected Kotlin compiler support sources are vendored at the pinned upstream revision.
     implementation(kotlin("reflect"))
     testImplementation(kotlin("test"))
 }

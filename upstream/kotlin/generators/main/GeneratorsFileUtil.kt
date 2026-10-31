@@ -4,10 +4,11 @@
  */
 package org.jetbrains.kotlin.generators.util
 
-import com.intellij.openapi.util.SystemInfo
-import com.intellij.openapi.util.text.StringUtil
+// Local standalone adaptation: use JDK utilities and stage temporary files beside the output.
+
 import java.io.File
 import java.io.IOException
+import java.nio.file.Files
 import kotlin.io.path.*
 
 object GeneratorsFileUtil {
@@ -48,10 +49,10 @@ object GeneratorsFileUtil {
         if (forbidGenerationOnTeamcity) {
             if (failOnTeamCity("Write file `${file.toPath()}`")) return false
         }
-        val useTempFile = !SystemInfo.isWindows
+        val useTempFile = !System.getProperty("os.name").startsWith("Windows", ignoreCase = true)
         val targetFile = file.toPath()
         val tempFile =
-            if (useTempFile) createTempDirectory(targetFile.name) / "${targetFile.name}.tmp" else targetFile
+            if (useTempFile) Files.createTempFile(targetFile.parent, "${targetFile.fileName}.", ".tmp") else targetFile
         tempFile.writeText(newText, Charsets.UTF_8)
         if (useTempFile) {
             tempFile.moveTo(targetFile, overwrite = true)
@@ -88,12 +89,14 @@ object GeneratorsFileUtil {
 
     fun isFileContentChangedIgnoringLineSeparators(file: File, content: String): Boolean {
         val currentContent: String = try {
-            StringUtil.convertLineSeparators(file.readText(Charsets.UTF_8))
+            normalizeLineSeparators(file.readText(Charsets.UTF_8))
         } catch (ignored: Throwable) {
             return true
         }
-        return StringUtil.convertLineSeparators(content) != currentContent
+        return normalizeLineSeparators(content) != currentContent
     }
+
+    private fun normalizeLineSeparators(text: String): String = text.replace("\r\n", "\n").replace('\r', '\n')
 
     fun collectPreviouslyGeneratedFiles(generationPath: File): List<File> {
         return generationPath.walkTopDown().filter {
