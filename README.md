@@ -29,9 +29,13 @@ The full CrossLangFuzzer generator wiring (its `TreeBuilder`, IR-specific printe
 
 ## Licensing and publication
 
-Kotlin's copied sources are under Apache License 2.0. The source, `LICENSE`, `NOTICE`, and `COPYRIGHT` files are retained under `upstream/kotlin/`. Preserve those notices and mark changes to copied files. `kotlin-compiler` is no longer a runtime dependency; `kotlin-reflect`, stdlib, and transitive annotations remain. The copied support classes keep `org.jetbrains.kotlin.*` names, so consumers should avoid also adding a compiler artifact that supplies those same classes. Maven Central publication is not configured yet.
+Kotlin's copied sources are under Apache License 2.0. The source, `LICENSE`, `NOTICE`, and `COPYRIGHT` files are retained under `upstream/kotlin/`. Preserve those notices and mark changes to copied files. `kotlin-compiler` is no longer a runtime dependency; `kotlin-reflect`, stdlib, and transitive annotations remain. The copied support classes keep `org.jetbrains.kotlin.*` names, so consumers should avoid also adding a compiler artifact that supplies those same classes.
 
-Before publishing, verify the final source/artifact contents, dependency licenses, required notices, and Maven Central signing/metadata requirements.
+Release `io.github.xyzboom:tree-generator:0.1.0` is published to Maven Central. Add it with:
+
+```kotlin
+implementation("io.github.xyzboom:tree-generator:0.1.0")
+```
 
 ## Build
 
@@ -41,4 +45,4 @@ Use the included Gradle Wrapper and JDK 11 or newer:
 ./gradlew :tree-generator:test :tree-generator:jar :tree-generator:sourcesJar
 ```
 
-The resulting binary, source, and retained license/NOTICE artifacts are written under `tree-generator/build/libs/`. Maven Central publication and permanent CrossLangFuzzer Gradle wiring are still pending.
+The resulting binary, source, and retained license/NOTICE artifacts are written under `tree-generator/build/libs/`. Release `io.github.xyzboom:tree-generator:0.1.0` is available from Maven Central.

@@ -42,3 +42,13 @@ Gradle 子模块 `tree-generator` 将以下上游目录作为 Kotlin main source
 ## 许可与修改
 
 上游源码遵循 Apache License 2.0。分发或修改时保留相应版权/许可声明和 NOTICE，并在改动的上游文件中标注本地修改。具体文件清单与来源记录以 [`../upstream/UPSTREAM.md`](../upstream/UPSTREAM.md) 为准。
+
+## Maven Central
+
+已发布坐标：`io.github.xyzboom:tree-generator:0.1.0`。Gradle 使用方式：
+
+```kotlin
+dependencies {
+    implementation("io.github.xyzboom:tree-generator:0.1.0")
+}
+```
